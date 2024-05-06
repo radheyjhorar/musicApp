@@ -1,7 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
+import allSongs from './Songs.json';
 
 const Home = () => {
+
+  const [audio] = useState(new Audio());
+
+  useEffect(() => {
+    audio.play();
+
+    return () => {
+      audio.pause();
+    };
+  }, []);
+
+  const [userData, setUserData] = useState({
+    songs: [...allSongs],
+    currentSong: null,
+    songCurrentTime: 0,
+  });
+
+  const playSong = (id) => {
+    const song = userData?.songs.find((song) => song.id === 1);
+    audio.src = song.src;
+    audio.title = song.title;
+  
+    if (userData?.currentSong === null || userData?.currentSong.id !== song.id) {
+      audio.currentTime = 0;
+    } else {
+      audio.currentTime = userData?.songCurrentTime;
+    }
+    userData.currentSong = song;
+    playButton.classList.add("playing");
+  
+    // highlightCurrentSong();
+    // setPlayerDisplay();
+    // setPlayButtonAccessibleText();
+    // audio.play();
+  };
+
+  
+  
+
   return (
     <>
       <div class="container">
@@ -42,7 +82,7 @@ const Home = () => {
                       height="18.5453"
                       transform="matrix(-1 0 0 1 4.63633 0)" /></svg>
                 </button>
-                <button id="play" class="play" aria-label="Play">
+                <button id="play" class="play" aria-label="Play" onClick={() => playSong()}>
                   <svg
                     width="17"
                     height="19"
